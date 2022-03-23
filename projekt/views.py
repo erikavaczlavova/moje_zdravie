@@ -39,3 +39,29 @@ def test(request):
             return HttpResponse("Succesfully saved")
         except:
             return HttpResponseBadRequest("Bad request")
+
+@csrf_exempt
+def vaccine(request):
+    if request.method == "GET":
+        try:
+            entry = Vaccine.objects.get(user_id=request.GET['user_id'])
+            response = {}
+            response['id'] = entry.id
+            response['user_id'] = entry.user_id
+            response['date'] = entry.date
+            response['dose'] = entry.dose
+            response['location'] = entry.location
+            response['name'] = entry.name
+            response['doctor'] = entry.doctor
+            return JsonResponse(response)
+        except:
+           return HttpResponseNotFound("Error: 404 Not Found")
+
+    elif request.method == "PUT":
+        try:
+            body = json.loads(request.body)
+            new = Vaccine(user_id=body['user_id'], date=body['date'], dose=body['dose'], location=body['location'], name=body['name'],doctor=body['doctor'])
+            new.save()
+            return HttpResponse("Succesfully saved")
+        except:
+            return HttpResponseBadRequest("Bad request")
