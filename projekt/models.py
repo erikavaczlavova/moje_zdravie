@@ -20,7 +20,6 @@ class Test(models.Model):
     location = models.CharField(max_length=200)
     type = models.CharField(max_length=200)
 
-
     def __str__(self):
         return self.location + self.type
 
@@ -32,8 +31,8 @@ class Vaccine(models.Model):
     name = models.CharField(max_length=200)
     doctor = models.CharField(max_length=200)
 
-    # def __str__(self):
-    #     return self.name
+    def __str__(self):
+        return self.name
 
 class Passport(models.Model):
     user_id = models.IntegerField()
@@ -42,5 +41,5 @@ class Passport(models.Model):
     dose = models.IntegerField()
     name = models.CharField(max_length=200)
 
-    # def __str__(self):
-    #     return self.name
+    def __str__(self):
+        return self.name

@@ -10,15 +10,20 @@ def index(request):
 def test(request):
     if request.method == "GET":
         try:
-            entry = Test.objects.get(user_id=request.GET['user_id'])
-            response = {}
-            response['id'] = entry.id
-            response['user_id'] = entry.user_id
-            response['date'] = entry.date
-            response['result'] = entry.result
-            response['location'] = entry.location
-            response['type'] = entry.type
-            return JsonResponse(response)
+            entries = Test.objects.filter(user_id=request.GET['user_id'], type=request.GET['type'])
+            responses = {
+                'items': []
+            }
+            for entry in entries:
+                response = {}
+                response['id'] = entry.id
+                response['user_id'] = entry.user_id
+                response['date'] = entry.date
+                response['result'] = entry.result
+                response['location'] = entry.location
+                response['type'] = entry.type
+                responses['items'].append(response)
+            return JsonResponse(responses)
         except:
             return HttpResponseNotFound("Error: 404 Not Found")
 
@@ -44,16 +49,21 @@ def test(request):
 def vaccine(request):
     if request.method == "GET":
         try:
-            entry = Vaccine.objects.get(user_id=request.GET['user_id'])
-            response = {}
-            response['id'] = entry.id
-            response['user_id'] = entry.user_id
-            response['date'] = entry.date
-            response['dose'] = entry.dose
-            response['location'] = entry.location
-            response['name'] = entry.name
-            response['doctor'] = entry.doctor
-            return JsonResponse(response)
+            entries = Vaccine.objects.filter(user_id=request.GET['user_id'])
+            responses = {
+                'items': []
+            }
+            for entry in entries:
+                response = {}
+                response['id'] = entry.id
+                response['user_id'] = entry.user_id
+                response['date'] = entry.date
+                response['dose'] = entry.dose
+                response['location'] = entry.location
+                response['name'] = entry.name
+                response['doctor'] = entry.doctor
+                responses['items'].append(response)
+            return JsonResponse(responses)
         except:
            return HttpResponseNotFound("Error: 404 Not Found")
 
