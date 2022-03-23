@@ -14,16 +14,19 @@ def test(request):
             responses = {
                 'items': []
             }
-            for entry in entries:
-                response = {}
-                response['id'] = entry.id
-                response['user_id'] = entry.user_id
-                response['date'] = entry.date
-                response['result'] = entry.result
-                response['location'] = entry.location
-                response['type'] = entry.type
-                responses['items'].append(response)
-            return JsonResponse(responses)
+            if entries:
+                for entry in entries:
+                    response = {}
+                    response['id'] = entry.id
+                    response['user_id'] = entry.user_id
+                    response['date'] = entry.date
+                    response['result'] = entry.result
+                    response['location'] = entry.location
+                    response['type'] = entry.type
+                    responses['items'].append(response)
+                return JsonResponse(responses)
+            else:
+                return HttpResponseNotFound("Error: 404 Not Found")
         except:
             return HttpResponseNotFound("Error: 404 Not Found")
 
@@ -53,19 +56,22 @@ def vaccine(request):
             responses = {
                 'items': []
             }
-            for entry in entries:
-                response = {}
-                response['id'] = entry.id
-                response['user_id'] = entry.user_id
-                response['date'] = entry.date
-                response['dose'] = entry.dose
-                response['location'] = entry.location
-                response['name'] = entry.name
-                response['doctor'] = entry.doctor
-                responses['items'].append(response)
-            return JsonResponse(responses)
+            if entries:
+                for entry in entries:
+                    response = {}
+                    response['id'] = entry.id
+                    response['user_id'] = entry.user_id
+                    response['date'] = entry.date
+                    response['dose'] = entry.dose
+                    response['location'] = entry.location
+                    response['name'] = entry.name
+                    response['doctor'] = entry.doctor
+                    responses['items'].append(response)
+                return JsonResponse(responses)
+            else:
+                return HttpResponseNotFound("Error: 404 Not Found")
         except:
-           return HttpResponseNotFound("Error: 404 Not Found")
+            return HttpResponseNotFound("Error: 404 Not Found")
 
     elif request.method == "PUT":
         try:
@@ -75,3 +81,28 @@ def vaccine(request):
             return HttpResponse("Succesfully saved")
         except:
             return HttpResponseBadRequest("Bad request")
+
+@csrf_exempt
+def passport(request):
+    if request.method == "GET":
+        try:
+            entries = Passport.objects.filter(user_id=request.GET['user_id'])
+            responses = {
+                'items': []
+            }
+            print(entries)
+            if entries:
+                for entry in entries:
+                    response = {}
+                    response['id'] = entry.id
+                    response['user_id'] = entry.user_id
+                    response['vaccine_id'] = entry.vaccine_id
+                    response['date'] = entry.date
+                    response['dose'] = entry.dose
+                    response['name'] = entry.name
+                    responses['items'].append(response)
+                return JsonResponse(responses)
+            else:
+                return HttpResponseNotFound("Error: 404 Not Found")
+        except:
+            return HttpResponseNotFound("Error: 404 Not Found")
