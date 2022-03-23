@@ -21,8 +21,8 @@ class Test(models.Model):
     type = models.CharField(max_length=200)
 
 
-    # def __str__(self):
-    #     return self.name
+    def __str__(self):
+        return self.location + self.type
 
 class Vaccine(models.Model):
     user_id = models.IntegerField()
