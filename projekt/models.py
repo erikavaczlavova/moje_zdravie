@@ -7,8 +7,8 @@ class User(models.Model):
     birthnum = models.CharField(max_length=200)
     password = models.CharField(max_length=20)
     birthdate = models.DateTimeField('date of birth')
-    weight = models.IntegerField()
-    height = models.IntegerField()
+    weight = models.IntegerField(null=True, blank=True)
+    height = models.IntegerField(null=True, blank=True)
 
     def __str__(self):
         return self.name
@@ -16,7 +16,7 @@ class User(models.Model):
 class Test(models.Model):
     user_id = models.IntegerField()
     date = models.DateTimeField('date of birth')
-    result = models.BooleanField()
+    result = models.BooleanField(null=True, blank=True)
     location = models.CharField(max_length=200)
     type = models.CharField(max_length=200)
 

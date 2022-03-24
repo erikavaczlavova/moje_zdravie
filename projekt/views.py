@@ -42,7 +42,7 @@ def test(request):
     elif request.method == "PUT":
         try:
             body = json.loads(request.body)
-            new = Test(user_id=body['user_id'], date=body['date'], location=body['location'], type=body['type'], result=False)
+            new = Test(user_id=body['user_id'], date=body['date'], location=body['location'], type=body['type'])
             new.save()
             return HttpResponse("Succesfully saved")
         except:
