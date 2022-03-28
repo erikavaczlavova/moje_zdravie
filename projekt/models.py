@@ -40,3 +40,8 @@ class Passport(models.Model):
 
     def __str__(self):
         return str(self.vaccine)
+
+
+class File(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    link = models.FileField(upload_to='files/')

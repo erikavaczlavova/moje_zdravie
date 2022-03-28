@@ -87,13 +87,12 @@ def vaccine(request):
 @csrf_exempt
 def passport(request):
     if request.method == "GET":
-        if True:
-            print("aaa")
+        try:
             entries = Passport.objects.filter(user_id=request.GET['user_id'])
             responses = {
                 'items': []
             }
-            print(entries, "aaa")
+
             if entries:
                 for entry in entries:
                     response = {}
@@ -107,7 +106,7 @@ def passport(request):
                 return JsonResponse(responses)
             else:
                 return HttpResponseNotFound("Error: 404 Not Found")
-        else:
+        except:
             return HttpResponseNotFound("Error: 404 Not Found")
 
 @csrf_exempt
@@ -141,3 +140,15 @@ def user(request):
             return JsonResponse(response)
         except:
             return HttpResponseNotFound("Error: 404 Not Found")
+
+@csrf_exempt
+def files(request):
+    if request.method == 'POST':
+        try:
+            body = request.POST
+            user = User.objects.get(id=body['user_id'])
+            form = File(user = user, link = request.FILES['file'])
+            form.save()
+            return HttpResponse("Success")
+        except:
+            return HttpResponseBadRequest("Bad request")
