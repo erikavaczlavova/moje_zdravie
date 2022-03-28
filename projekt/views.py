@@ -106,3 +106,35 @@ def passport(request):
                 return HttpResponseNotFound("Error: 404 Not Found")
         except:
             return HttpResponseNotFound("Error: 404 Not Found")
+
+@csrf_exempt
+def user(request):
+    if request.method == "POST":
+        try:
+            body = json.loads(request.body)
+            entry = User.objects.get(id=body['id'])
+            entry.name = body['name']
+            entry.password = body['password']
+            entry.birthnum = body['birthnum']
+            entry.birthdate = body['birthdate']
+            entry.weight = body['weight']
+            entry.height = body['height']
+            entry.save()
+            return HttpResponse("Succesfully saved")
+        except:
+            return HttpResponseNotFound("Error: 404 Not Found")
+
+    elif request.method == "GET":
+        try:
+            entry = User.objects.get(id=request.GET['id'])
+            response = {}
+            response['id'] = entry.id
+            response['name'] = entry.name
+            response['birthnum'] = entry.birthnum
+            response['birthdate'] = entry.birthdate
+            response['password'] = entry.password
+            response['weight'] = entry.weight
+            response['height'] = entry.height
+            return JsonResponse(response)
+        except:
+            return HttpResponseNotFound("Error: 404 Not Found")
