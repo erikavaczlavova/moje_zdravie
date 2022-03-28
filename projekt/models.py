@@ -14,32 +14,29 @@ class User(models.Model):
         return self.name
 
 class Test(models.Model):
-    user_id = models.IntegerField()
-    date = models.DateTimeField('date of birth')
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    date = models.DateTimeField('date of the test')
     result = models.BooleanField(null=True, blank=True)
     location = models.CharField(max_length=200)
     type = models.CharField(max_length=200)
 
     def __str__(self):
-        return self.location + self.type
+        return self.user.name + self.location + self.type
 
 class Vaccine(models.Model):
-    user_id = models.IntegerField()
-    date = models.DateTimeField('date of birth')
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    date = models.DateTimeField('date of vaccination')
     dose = models.IntegerField()
     location = models.CharField(max_length=200)
     name = models.CharField(max_length=200)
     doctor = models.CharField(max_length=200)
 
     def __str__(self):
-        return self.name
+        return self.user.name + str(self.dose)
 
 class Passport(models.Model):
-    user_id = models.IntegerField()
-    vaccine_id = models.IntegerField()
-    date = models.DateTimeField('date of birth')
-    dose = models.IntegerField()
-    name = models.CharField(max_length=200)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    vaccine = models.ForeignKey(Vaccine, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.name
+        return str(self.vaccine)

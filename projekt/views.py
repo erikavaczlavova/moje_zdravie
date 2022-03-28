@@ -10,7 +10,7 @@ def index(request):
 def test(request):
     if request.method == "GET":
         try:
-            entries = Test.objects.filter(user_id=request.GET['user_id'], type=request.GET['type'])
+            entries = Test.objects.filter(user=request.GET['user_id'], type=request.GET['type'])
             responses = {
                 'items': []
             }
@@ -42,7 +42,8 @@ def test(request):
     elif request.method == "PUT":
         try:
             body = json.loads(request.body)
-            new = Test(user_id=body['user_id'], date=body['date'], location=body['location'], type=body['type'])
+            user = User.objects.get(id=body['user_id'])
+            new = Test(user=user, date=body['date'], location=body['location'], type=body['type'])
             new.save()
             return HttpResponse("Succesfully saved")
         except:
@@ -52,7 +53,7 @@ def test(request):
 def vaccine(request):
     if request.method == "GET":
         try:
-            entries = Vaccine.objects.filter(user_id=request.GET['user_id'])
+            entries = Vaccine.objects.filter(user=request.GET['user_id'])
             responses = {
                 'items': []
             }
@@ -76,7 +77,8 @@ def vaccine(request):
     elif request.method == "PUT":
         try:
             body = json.loads(request.body)
-            new = Vaccine(user_id=body['user_id'], date=body['date'], dose=body['dose'], location=body['location'], name=body['name'],doctor=body['doctor'])
+            user = User.objects.get(id=body['user_id'])
+            new = Vaccine(user=user, date=body['date'], dose=body['dose'], location=body['location'], name=body['name'],doctor=body['doctor'])
             new.save()
             return HttpResponse("Succesfully saved")
         except:
@@ -85,26 +87,27 @@ def vaccine(request):
 @csrf_exempt
 def passport(request):
     if request.method == "GET":
-        try:
+        if True:
+            print("aaa")
             entries = Passport.objects.filter(user_id=request.GET['user_id'])
             responses = {
                 'items': []
             }
-            print(entries)
+            print(entries, "aaa")
             if entries:
                 for entry in entries:
                     response = {}
                     response['id'] = entry.id
                     response['user_id'] = entry.user_id
-                    response['vaccine_id'] = entry.vaccine_id
-                    response['date'] = entry.date
-                    response['dose'] = entry.dose
-                    response['name'] = entry.name
+                    response['vaccine_id'] = entry.vaccine.id
+                    response['date'] = entry.vaccine.date
+                    response['dose'] = entry.vaccine.dose
+                    response['name'] = entry.vaccine.name
                     responses['items'].append(response)
                 return JsonResponse(responses)
             else:
                 return HttpResponseNotFound("Error: 404 Not Found")
-        except:
+        else:
             return HttpResponseNotFound("Error: 404 Not Found")
 
 @csrf_exempt
