@@ -48,7 +48,7 @@ def test(request):
             new.save()
             return HttpResponse("Succesfully saved")
         except:
-            return HttpResponseBadRequest("Bad request")
+            return HttpResponseBadRequest("Error: Bad request")
 
     elif request.method == "POST":
         try:
@@ -59,7 +59,7 @@ def test(request):
             entry.save()
             return HttpResponse("Succesfully edited")
         except:
-            return HttpResponseBadRequest("Bad request")
+            return HttpResponseBadRequest("Error: Bad request")
 
 
 @csrf_exempt
@@ -95,7 +95,7 @@ def vaccine(request):
             new.save()
             return HttpResponse("Succesfully saved")
         except:
-            return HttpResponseBadRequest("Bad request")
+            return HttpResponseBadRequest("Error: Bad request")
 
 @csrf_exempt
 def passport(request):
@@ -127,8 +127,9 @@ def user(request):
     if request.method == "POST":
         try:
             body = json.loads(request.body)
+            print(body['id'])
             entry = User.objects.get(id=body['id'])
-            entry.name = body['name']
+            print(entry)
             entry.password = body['password']
             entry.birthnum = body['birthnum']
             entry.birthdate = body['birthdate']
@@ -155,16 +156,16 @@ def user(request):
             return HttpResponseNotFound("Error: 404 Not Found")
 
 @csrf_exempt
-def files(request):
+def file(request):
     if request.method == 'POST':
         try:
             body = request.POST
             user = User.objects.get(id=body['user_id'])
-            form = File(user = user, link = request.FILES['file'])
+            form = File(user=user, title=body['title'], link=request.FILES['file'])
             form.save()
             return HttpResponse("Success")
         except:
-            return HttpResponseBadRequest("Bad request")
+            return HttpResponseBadRequest("Error: Bad request")
 
     elif request.method == 'GET':
         if 'title' in request.GET:

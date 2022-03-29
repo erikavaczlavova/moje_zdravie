@@ -8,5 +8,5 @@ urlpatterns = [
     path('vaccine', views.vaccine, name='vaccine'),
     path('passport', views.passport, name='passport'),
     path('user', views.user, name='user'),
-    path('files', views.files, name='files')
+    path('file', views.file, name='file')
 ]
