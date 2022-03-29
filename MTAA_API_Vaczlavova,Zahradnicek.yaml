@@ -1,0 +1,465 @@
+swagger: '2.0'
+info:
+  version: 1.0.0
+  description: Moje zdravie API
+  title: MTAA - Moje Zdravie
+
+# tags are used for organizing operations
+tags:
+- name: Test
+  description: Calls made to the `Test` endpoint
+- name: Vaccine
+  description: Calls made to the `Vaccine` endpoint
+- name: User
+  description: Calls made to the `User` endpoint
+- name: Passport
+  description: Calls made to the `Passport` endpoint
+- name: File
+  description: Calls made to the `File` endpoint
+
+paths:
+  /test:
+    get:
+      tags:
+      - Test
+      summary: gets a test
+      operationId: getTest
+      description: |
+        By passing in an existing user id and the test's type, it returns a list of tests that match the input parameters
+      produces:
+      - json/http response
+      parameters:
+      - in: query
+        name: user_id
+        description: pass an existing user id
+        required: true
+        type: integer
+      - in: query
+        name: type
+        enum:
+          - "AG"
+          - "PCR"
+        description: pass an existing test type
+        required: true
+        type: string
+      responses:
+        200:
+          description: list of tests
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/testout'
+        404:
+          description: "Error: Not Found"
+    put:
+      tags:
+      - Test
+      summary: adds a test
+      operationId: addTest
+      description: Adds a test to the system
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: testin
+        description: Test to add
+        schema:
+          $ref: '#/definitions/testin'
+      responses:
+        200:
+          description: Successfully created
+        400:
+          description: "Error: Bad request"
+    delete:
+      tags:
+      - Test
+      summary: deletes a test
+      operationId: deleteTest
+      description: |
+        By passing in an existing id it deletes a test
+      produces:
+      - http response
+      parameters:
+      - in: query
+        name: id
+        description: pass an existing test id
+        required: true
+        type: integer
+      responses:
+        200:
+          description: "Succesfully deleted"
+        404:
+          description: "Error: Not Found"
+  /vaccine:
+    get:
+      tags:
+      - Vaccine
+      summary: gets a vaccine
+      operationId: getVaccine
+      description: |
+        By passing in an existing user id, it returns a list of vaccines that match the input parameters
+      produces:
+      - json/http response
+      parameters:
+      - in: query
+        name: user_id
+        description: pass an existing user id
+        required: true
+        type: integer
+      responses:
+        200:
+          description: list of vaccines
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/vaxxout'
+        404:
+          description: "Error: Not Found"
+    put:
+      tags:
+      - Vaccine
+      summary: adds a vaccine
+      operationId: addVaxx
+      description: Adds a vaccine to the system
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: vaxxin
+        description: Vaccine to add
+        schema:
+          $ref: '#/definitions/vaxxin'
+      responses:
+        200:
+          description: Successfully created
+        400:
+          description: "Error: Bad request"
+  /user:
+    get:
+      tags:
+      - User
+      summary: gets a user
+      operationId: getUser
+      description: |
+        By passing in an existing id it returns a user
+      produces:
+      - json/http response
+      parameters:
+      - in: query
+        name: id
+        description: pass an existing id
+        required: true
+        type: integer
+      responses:
+        200:
+          description: a user
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/userout'
+        404:
+          description: "Error: Not Found"
+    post:
+      tags:
+      - User
+      summary: edits an user
+      operationId: editUser
+      description: Edits a user in the system
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: userin
+        description: User to edit
+        schema:
+          $ref: '#/definitions/userin'
+      responses:
+        200:
+          description: Successfully saved
+        400:
+          description: "Error: Bad request"
+  /passport:
+    get:
+      tags:
+      - Passport
+      summary: gets a passport
+      operationId: getPassport
+      description: |
+        By passing in an existing user id, it returns a list of passports that match the input parameters
+      produces:
+      - json/http response
+      parameters:
+      - in: query
+        name: user_id
+        description: pass an existing user id
+        required: true
+        type: integer
+      responses:
+        200:
+          description: list of passports
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/passout'
+        404:
+          description: "Error: Not Found"
+  /file:
+    post:
+      tags:
+      - File
+      summary: adds a file
+      operationId: addFile
+      description: Adds a file into the system
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: filein
+        description: File to add
+        schema:
+          $ref: '#/definitions/filein'
+      responses:
+        200:
+          description: Success
+        400:
+          description: "Error: Bad request"
+      
+    
+definitions:
+  testout:
+    type: object
+    required:
+    - id
+    - user_id
+    - type
+    - date
+    - location
+    - result
+    properties:
+      id:
+        type: integer
+        example: 2
+      user_id:
+        type: integer
+        example: 3
+      type:
+        type: string
+        example: AG
+      date:
+        type: string
+        format: date-time
+        example: '2016-08-29T09:12:33.001Z'
+      location:
+        type: string
+        example: Bratislava
+      result:
+        type: boolean
+        example: True
+  testin:
+    type: object
+    required:
+    - user_id
+    - type
+    - date
+    - location
+    properties:
+      user_id:
+        type: integer
+        example: 3
+      type:
+        type: string
+        example: AG
+      date:
+        type: string
+        format: date-time
+        example: '2016-08-29T09:12:33.001Z'
+      location:
+        type: string
+        example: Bratislava
+  vaxxout:
+    type: object
+    required:
+    - id
+    - user_id
+    - date
+    - dose
+    - location
+    - name
+    - doctor
+    properties:
+      id:
+        type: integer
+        example: 2
+      user_id:
+        type: integer
+        example: 3
+      date:
+        type: string
+        format: date-time
+        example: '2016-08-29T09:12:33.001Z'
+      dose:
+        type: integer
+        example: 2
+      location:
+        type: string
+        example: Bratislava
+      name:
+        type: string
+        example: Pfizer
+      doctor:
+        type: string
+        example: Dr. Vesely
+  vaxxin:
+    type: object
+    required:
+    - user_id
+    - type
+    - date
+    - location
+    properties:
+      user_id:
+        type: integer
+        example: 3
+      date:
+        type: string
+        format: date-time
+        example: '2016-08-29T09:12:33.001Z'
+      dose:
+        type: integer
+        example: 2
+      location:
+        type: string
+        example: Bratislava
+      name:
+        type: string
+        example: Pfizer
+      doctor:
+        type: string
+        example: Dr. Vesely
+  userout:
+    type: object
+    required:
+    - id
+    - name
+    - birthnum
+    - birthdate
+    - password
+    - weight
+    - height
+    properties:
+      id:
+        type: integer
+        example: 2
+      name:
+        type: string
+        example: Janko Mrkvicka
+      birthnum:
+        type: string
+        example: "2360/2651"
+      date:
+        type: string
+        format: date-time
+        example: '2016-08-29T09:12:33.001Z'
+      password:
+        type: string
+        example: PassW0rd!
+      weight:
+        type: integer
+        example: 96
+      height:
+        type: integer
+        example: 182
+  userin:
+    type: object
+    required:
+    - id
+    - name
+    - birthnum
+    - birthdate
+    - password
+    - weight
+    - height
+    properties:
+      id:
+        type: integer
+        example: 2
+      name:
+        type: string
+        example: Janko Mrkvicka
+      birthnum:
+        type: string
+        example: "2360/2651"
+      date:
+        type: string
+        format: date-time
+        example: '2016-08-29T09:12:33.001Z'
+      password:
+        type: string
+        example: PassW0rd!
+      weight:
+        type: integer
+        example: 96
+      height:
+        type: integer
+        example: 182
+  passout:
+    type: object
+    required:
+    - id
+    - user_id
+    - date
+    - dose
+    - location
+    - name
+    - doctor
+    properties:
+      id:
+        type: integer
+        example: 2
+      user_id:
+        type: integer
+        example: 3
+      vaccine_id:
+        type: integer
+        example: 4
+      date:
+        type: string
+        format: date-time
+        example: '2016-08-29T09:12:33.001Z'
+      dose:
+        type: integer
+        example: 2
+      name:
+        type: string
+        example: Pfizer
+  filein:
+    type: object
+    required:
+    - user_id
+    - file
+    properties:
+      user_id:
+        type: integer
+        example: 2
+      file:
+        type: string
+        example: test.png
+        
+# Added by API Auto Mocking Plugin
+#host: virtserver.swaggerhub.com
+#basePath: /FIIT-STU-MTAA/MTAA/1.0.0
+#schemes:
+ #- https
+# Added by API Auto Mocking Plugin
+host: virtserver.swaggerhub.com
+basePath: /FIIT-STU-MTAA/MTAA/1.0.0
+schemes:
+ - https
