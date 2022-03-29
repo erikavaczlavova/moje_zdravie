@@ -1,4 +1,5 @@
-from django.http import HttpResponse, JsonResponse, HttpResponseNotFound, QueryDict, HttpResponseBadRequest
+from django.http import HttpResponse, JsonResponse, HttpResponseNotFound, QueryDict, HttpResponseBadRequest, \
+    FileResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
 from projekt.models import *
@@ -48,6 +49,18 @@ def test(request):
             return HttpResponse("Succesfully saved")
         except:
             return HttpResponseBadRequest("Bad request")
+
+    elif request.method == "POST":
+        try:
+            body = json.loads(request.body)
+            entry = Test.objects.get(id=body['id'])
+            entry.date = body['date']
+            entry.location = body['location']
+            entry.save()
+            return HttpResponse("Succesfully edited")
+        except:
+            return HttpResponseBadRequest("Bad request")
+
 
 @csrf_exempt
 def vaccine(request):
@@ -152,3 +165,27 @@ def files(request):
             return HttpResponse("Success")
         except:
             return HttpResponseBadRequest("Bad request")
+
+    elif request.method == 'GET':
+        if 'title' in request.GET:
+            try:
+                entry = File.objects.get(user=request.GET['user_id'],title=request.GET['title'])
+                return FileResponse(open(entry.link.path,'rb'))
+            except:
+                return HttpResponseNotFound("Error: 404 Not Found")
+
+        else:
+            try:
+                entries = File.objects.filter(user=request.GET['user_id'])
+                responses = {
+                    'items': []
+                }
+                if entries:
+                    for entry in entries:
+                        response = {}
+                        response['id'] = entry.id
+                        response['title'] = entry.title
+                        responses['items'].append(response)
+                    return JsonResponse(responses)
+            except:
+                return HttpResponseNotFound("Error: 404 Not Found")

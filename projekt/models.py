@@ -45,3 +45,7 @@ class Passport(models.Model):
 class File(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     link = models.FileField(upload_to='files/')
+    title = models.CharField(max_length=200, default="Title")
+
+    def __str__(self):
+        return str(self.title) + str(self.user.name)
