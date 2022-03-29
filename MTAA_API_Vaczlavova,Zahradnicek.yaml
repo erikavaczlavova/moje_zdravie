@@ -66,7 +66,28 @@ paths:
         name: testin
         description: Test to add
         schema:
-          $ref: '#/definitions/testin'
+          $ref: '#/definitions/testputin'
+      responses:
+        200:
+          description: Successfully created
+        400:
+          description: "Error: Bad request"
+    post:
+      tags:
+      - Test
+      summary: edits a test
+      operationId: editTest
+      description: Edits a test in the system
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: testin
+        description: Test to edit
+        schema:
+          $ref: '#/definitions/testpostin'
       responses:
         200:
           description: Successfully created
@@ -89,7 +110,7 @@ paths:
         type: integer
       responses:
         200:
-          description: "Succesfully deleted"
+          description: "Deleted"
         404:
           description: "Error: Not Found"
   /vaccine:
@@ -231,8 +252,39 @@ paths:
           description: Success
         400:
           description: "Error: Bad request"
-      
-    
+    get:
+      tags:
+      - File
+      summary: gets a file
+      operationId: getFile
+      description: Gets a file from the system
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: query
+        name: user_id
+        description: pass an existing user id
+        required: true
+        type: integer
+      - in: query
+        name: title
+        description: pass an existing title
+        required: false
+        type: string
+      responses:
+          200:
+            description: list of files
+            schema:
+              type: array
+              items:
+                $ref: '#/definitions/fileout'
+          404:
+            description: "Error: Not Found"
+
+
+
 definitions:
   testout:
     type: object
@@ -263,7 +315,7 @@ definitions:
       result:
         type: boolean
         example: True
-  testin:
+  testputin:
     type: object
     required:
     - user_id
@@ -277,6 +329,23 @@ definitions:
       type:
         type: string
         example: AG
+      date:
+        type: string
+        format: date-time
+        example: '2016-08-29T09:12:33.001Z'
+      location:
+        type: string
+        example: Bratislava
+  testpostin:
+    type: object
+    required:
+    - id
+    - date
+    - location
+    properties:
+      id:
+        type: integer
+        example: 3
       date:
         type: string
         format: date-time
@@ -380,7 +449,6 @@ definitions:
   userin:
     type: object
     required:
-    - id
     - name
     - birthnum
     - birthdate
@@ -390,10 +458,7 @@ definitions:
     properties:
       id:
         type: integer
-        example: 2
-      name:
-        type: string
-        example: Janko Mrkvicka
+        example: 3
       birthnum:
         type: string
         example: "2360/2651"
@@ -449,9 +514,24 @@ definitions:
       user_id:
         type: integer
         example: 2
+      title:
+        type: string
+        example: title
       file:
         type: string
         example: test.png
+  fileout:
+    type: object
+    required:
+    - id
+    - file
+    properties:
+      id:
+        type: integer
+        example: 2
+      title:
+        type: string
+        example: Title
         
 # Added by API Auto Mocking Plugin
 #host: virtserver.swaggerhub.com
