@@ -53,8 +53,9 @@ def test(request):
     elif request.method == "POST":
         try:
             body = json.loads(request.body)
+            print(body)
             entry = Test.objects.get(id=body['id'])
-            entry.date = body['date']
+            entry.type = body['type']
             entry.location = body['location']
             entry.save()
             return HttpResponse("Succesfully edited")
