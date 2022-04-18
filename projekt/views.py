@@ -1,4 +1,4 @@
-from django.http import HttpResponse, JsonResponse, HttpResponseNotFound, QueryDict, HttpResponseBadRequest, \
+from django.http import HttpResponse, JsonResponse, HttpResponseNotFound, QueryDict, HttpResponseBadRequest, HttpResponseForbidden, \
     FileResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
@@ -142,19 +142,31 @@ def user(request):
             return HttpResponseNotFound("Error: 404 Not Found")
 
     elif request.method == "GET":
-        try:
-            entry = User.objects.get(id=request.GET['id'])
-            response = {}
-            response['id'] = entry.id
-            response['name'] = entry.name
-            response['birthnum'] = entry.birthnum
-            response['birthdate'] = entry.birthdate
-            response['password'] = entry.password
-            response['weight'] = entry.weight
-            response['height'] = entry.height
-            return JsonResponse(response)
-        except:
-            return HttpResponseNotFound("Error: 404 Not Found")
+        if 'id' in request.GET:
+            try:
+                entry = User.objects.get(id=request.GET['id'])
+                response = {}
+                response['id'] = entry.id
+                response['name'] = entry.name
+                response['birthnum'] = entry.birthnum
+                response['birthdate'] = entry.birthdate
+                response['password'] = entry.password
+                response['weight'] = entry.weight
+                response['height'] = entry.height
+                return JsonResponse(response)
+            except:
+                return HttpResponseNotFound("Error: 404 Not Found")
+        else:
+            try:
+                entry = User.objects.get(birthnum=request.GET['birthnum'])
+                if request.GET['birthnum'] == entry.birthnum and request.GET['password'] == entry.password:
+                    response = {}
+                    response['id'] = entry.id
+                    return JsonResponse(response)
+                else:
+                    return HttpResponseForbidden('Error: 403 Bad credentials')
+            except:
+                return HttpResponseNotFound("Error: 404 Not Found")
 
 @csrf_exempt
 def file(request):
